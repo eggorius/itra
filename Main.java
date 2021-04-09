@@ -10,9 +10,9 @@ import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.util.encoders.Hex;
 
 public class Main {
-  public static String computerMove(byte[] seed, String[] args, int move) {
+  public static String computerMove(byte[] key, String[] args, int move) {
     HMac hmac = new HMac(new SHA256Digest());
-    hmac.init(new KeyParameter(seed));
+    hmac.init(new KeyParameter(key));
     byte[] bytes = args[move].getBytes(StandardCharsets.UTF_8);
     hmac.update(bytes, 0, bytes.length);
     byte[] result = new byte[hmac.getMacSize()];
@@ -31,7 +31,8 @@ public class Main {
 
     Scanner sc = new Scanner(System.in);
     while (true) {
-      byte[] hmacKey = secureRandom.generateSeed(16);
+      byte[] hmacKey = new byte[16];
+      secureRandom.nextBytes(hmacKey);
       int compMove = secureRandom.nextInt(args.length);
 
       System.out.println("HMAC: " + computerMove(hmacKey, args, compMove));
